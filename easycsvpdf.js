@@ -57,7 +57,7 @@ class EasyCsvPdf {
      * It gets calculated "deterministicly" in most printing functions.
      * @type {number}
      */
-    x = 0;  
+    x = 0;
     /**
      * Y cordinate used when printing data to the pdf
      * Manually altering will break things!
@@ -69,7 +69,7 @@ class EasyCsvPdf {
      * Character/s that separate the columns in the CSV.
      * @type {string}
      */
-    separator = ",";    
+    separator = ",";
     /**
      * Customization parameters for the pdf
      * @param {string} title
@@ -109,6 +109,8 @@ class EasyCsvPdf {
      * 
      *  '#'             -> Putting a '#' at the start will print said column in bold text. EX: #!TITLES, #TEXT, #!NAME
      * 
+     *  '@'             -> Putting a '#' at the start will draw a rectangle arround the text. EX: @!TITLES, @TEXT, @!NAME
+     * 
      *  ':[number]'     -> Putting a ':' followed by a number sets the span/number of columns this value will ocuppy.
      * 
      *                     With '!TITLES' and '!DATA!' defines the span of each created column.
@@ -137,18 +139,20 @@ class EasyCsvPdf {
      * @type {{ title: string; type: string; background_color: string; background_color_alt: string; alternate_backgrounds: boolean; card_separators: string; card_spacing: number; card_rows: {}; margin: number; card_column_separation: number; }}
      */
     format = {
-        title: "title", 
-        type: "", 
+        title: "title",
+        type: "",
         background_color: "white",
         background_color_alt: "white",
         alternate_backgrounds: false,
         card_separators: "line",
         card_spacing: 10,
-        card_rows: [ 
+        card_rows: [
             ['#!TITLES'],
             ["!DATA"],
 
         ],
+        text_size: 6,
+        overflow: "push", // "Push" -> augment y cordinate, "none" -> do nothing
         margin: 20,
         card_column_separation: 5 //Separation between columns in a card
     };
@@ -216,12 +220,13 @@ class EasyCsvPdf {
         let column_count = 0;
         let column_width = 0;
         this.x = this.format.margin;
-        this.y += 2;
+        this.y += this.format.text_size / 2;
         //Count number of columns, and set widths
         for (let i = 0; i < row_format.length; i++) {
             const element_noclean = row_format[i].split(':');
             const element = row_format[i].split(':');
             element[0] = element[0].replace("#", "")
+            element[0] = element[0].replace("@", "")
             //Check if span is specified
             if (element.length > 1) {
                 //Check if valid/user wants a ":" character
@@ -255,11 +260,13 @@ class EasyCsvPdf {
 
         for (let i = 0; i < row_format.length; i++) {
             const element = row_format[i].split(':');
+            var print_rect = (element[0] != element[0].replace("@", ""));
+            element[0] = element[0].replace("@", "");
             if (element[0].charAt(0) == "#") {
-                this.doc.setFontSize(6);
+                this.doc.setFontSize(this.format.text_size);
                 this.doc.setFont("helvetica", "normal", "bold");
             } else {
-                this.doc.setFontSize(6);
+                this.doc.setFontSize(this.format.text_size);
                 this.doc.setFont("helvetica", "normal", "normal");
             }
             element[0] = element[0].replace("#", "")
@@ -286,6 +293,10 @@ class EasyCsvPdf {
                         this.x += this.format.margin;
                         this.x += this.format.card_column_separation * (current_column + 1);
                         this.doc.text(texts[j], this.x, this.y, { maxWidth: column_width * element_span });
+                        if(print_rect){
+                            this.doc.rect(this.x,this.y - this.format.text_size + this.format.text_size / 3 
+                            ,column_width * element_span,this.format.text_size - this.format.text_size / 7)
+                        }
                         current_column += element_span;
                         text_nospan = text_nospan + element[0];
                     }
@@ -305,10 +316,18 @@ class EasyCsvPdf {
                         text_nospan = text_nospan + element[0];
                         if (data[data_index] != null && data[data_index] != undefined) {
                             this.doc.text(data[data_index], this.x, this.y, { maxWidth: column_width * element_span });
+                            if (print_rect) {
+                                this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3,
+                                 column_width * element_span, this.format.text_size - this.format.text_size / 7)
+                            }
                         }
                     } else {
                         //console.log(current_column, "/", column_count, ":", "space", element_span)
                         //this.doc.text("space", this.x, this.y, { maxWidth: column_width * element_span });
+                        if (print_rect) {
+                                this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3
+                                , column_width * element_span, this.format.text_size - this.format.text_size / 7)
+                            }
                     }
                     current_column += element_span;
                 } else {
@@ -328,6 +347,9 @@ class EasyCsvPdf {
                     this.x += this.format.card_column_separation * (current_column + 1);
                     if (element[0] != null) {
                         this.doc.text(element[0], this.x, this.y, { maxWidth: column_width * element_span });
+                        if (print_rect) {
+                            this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3, column_width * element_span, this.format.text_size - this.format.text_size / 7)
+                        }
                     }
                     // console.log(current_column, "/", column_count, ":", element[0], element_span)
                     current_column += element_span;
@@ -343,6 +365,9 @@ class EasyCsvPdf {
                     // console.log(text_nospan)
                     this.doc.text(text_nospan, this.x, this.y, { maxWidth: column_width * element_span });
                     current_column += element_span;
+                    if (print_rect) {
+                        this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3, column_width * element_span, this.format.text_size - this.format.text_size / 7)
+                    }
                 }
             }
 
@@ -366,7 +391,7 @@ class EasyCsvPdf {
         if (this.y + 35 > this.doc_height) {
             this.doc.addPage();
             this.doc.setFont("helvetica", "normal", "bold");
-            this.doc.setFontSize(8);
+            this.doc.setFontSize(this.format.text_size + this.format.text_size / 3);
             this.y = this.format.margin;
             this.x = this.format.margin;
             this.doc.text(this.x, this.y, this.title);
@@ -410,7 +435,7 @@ class EasyCsvPdf {
      */
     createPdf() {
         this.doc.setFont("helvetica", "normal", "bold");
-        this.doc.setFontSize(8);
+        this.doc.setFontSize(this.format.text_size + this.format.text_size / 3);
         //console.log(this.doc.getFontList());
         this.y = this.format.margin;
         this.x = this.format.margin;
@@ -421,12 +446,12 @@ class EasyCsvPdf {
         this.doc.save("test.pdf");
     }
 
-    
+
     /**
      * Manually save and download the pdf. Gets called in the "createPdf()" method.
      * @param {string} [filename="test.pdf"] Filename
      */
-    savePdf(filename = "test.pdf"){
+    savePdf(filename = "test.pdf") {
         this.doc.save(filename);
     }
 
