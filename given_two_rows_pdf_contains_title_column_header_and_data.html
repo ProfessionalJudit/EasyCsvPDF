@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Example of EasyCsvPdf</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="easycsvpdf.js"></script>
+  </head>
+  <body>
+    <button id="generatePdf">Generar PDF</button>
+
+    <script>
+      const csvData = `Nombre,Edad,Altura
+      Mario Bros, 150, 300
+      `;
+
+      document.getElementById("generatePdf").addEventListener("click", () => {
+        const pdfGenerator = new EasyCsvPdf(
+          csvData,
+          "Testing PDF with my machine",
+          ",",
+          "CARDS"
+        );
+        pdfGenerator.createPdf();
+      });
+    </script>
+  </body>
+</html>

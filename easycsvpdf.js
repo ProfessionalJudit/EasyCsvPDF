@@ -169,12 +169,12 @@ class EasyCsvPdf {
         this.csv = csv;
         this.separator = separator;
         this.title = title;
-        this.lines = csv.split("\n");
+        this.lines = csv.split("\n").filter(line => line.trim() !== "");
         this.titles = this.lines[0].split(this.separator);
         if (this.titles[this.titles.length - 1] == undefined || this.titles[this.titles.length - 1] == "") {
             this.titles = this.titles.slice(0, this.titles.length - 1)
         }
-        if (this.lines[this.titles.length - 1] == undefined || this.lines[this.lines.length - 1] == "") {
+        if (this.lines[this.lines.length - 1] == undefined || this.lines[this.lines.length - 1] == "") {
             this.lines = this.lines.slice(0, this.lines.length - 1)
         }
         console.log(this.lines[this.titles.length - 1])
@@ -293,9 +293,9 @@ class EasyCsvPdf {
                         this.x += this.format.margin;
                         this.x += this.format.card_column_separation * (current_column + 1);
                         this.doc.text(texts[j], this.x, this.y, { maxWidth: column_width * element_span });
-                        if(print_rect){
-                            this.doc.rect(this.x,this.y - this.format.text_size + this.format.text_size / 3 
-                            ,column_width * element_span,this.format.text_size - this.format.text_size / 7)
+                        if (print_rect) {
+                            this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3
+                                , column_width * element_span, this.format.text_size - this.format.text_size / 7)
                         }
                         current_column += element_span;
                         text_nospan = text_nospan + element[0];
@@ -318,16 +318,16 @@ class EasyCsvPdf {
                             this.doc.text(data[data_index], this.x, this.y, { maxWidth: column_width * element_span });
                             if (print_rect) {
                                 this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3,
-                                 column_width * element_span, this.format.text_size - this.format.text_size / 7)
+                                    column_width * element_span, this.format.text_size - this.format.text_size / 7)
                             }
                         }
                     } else {
                         //console.log(current_column, "/", column_count, ":", "space", element_span)
                         //this.doc.text("space", this.x, this.y, { maxWidth: column_width * element_span });
                         if (print_rect) {
-                                this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3
+                            this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3
                                 , column_width * element_span, this.format.text_size - this.format.text_size / 7)
-                            }
+                        }
                     }
                     current_column += element_span;
                 } else {
