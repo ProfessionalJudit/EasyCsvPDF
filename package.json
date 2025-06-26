@@ -1,0 +1,27 @@
+{
+  "name": "easycsvpdf",
+  "version": "1.0.0",
+  "description": "Simple JS Script/Library for generating PDF files from CSV files and customizing their format.",
+  "homepage": "https://github.com/danielnagercarpio/EasyCsvPDF#readme",
+  "bugs": {
+    "url": "https://github.com/danielnagercarpio/EasyCsvPDF/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielnagercarpio/EasyCsvPDF.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "easycsvpdf.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.1",
+    "playwright": "^1.53.1"
+  },
+  "dependencies": {
+    "pdf-parse": "^1.1.1"
+  }
+}
