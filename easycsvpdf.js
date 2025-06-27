@@ -479,4 +479,8 @@ class EasyCsvPdf {
 
 }
 
-module.exports = EasyCsvPdf;
+if (typeof window === 'undefined') {
+    module.exports = EasyCsvPdf;
+} else {
+    window.EasyCsvPdf = EasyCsvPdf;
+}
