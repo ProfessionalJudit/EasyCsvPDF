@@ -213,6 +213,16 @@ class EasyCsvPdf {
      * @param {number} [index=0] 
      */
     getData(index = 0) {
+        if (index + 1 == 0) {
+            return "[error]: index is lower than valid index";
+        }
+        if (index + 1 >= this.lines.length) {
+            return "[error]: index is greather than valid index";
+        }
+
+        if (index + 1 < this.lines.length) {
+            return this.lines[index + 1];
+        }
 
     }
     /**
