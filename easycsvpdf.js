@@ -199,6 +199,13 @@ class EasyCsvPdf {
         if (index >= 0 && index < this.titles.length) {
             return this.titles[index];
         }
+        if (index < 0) {
+            return "[error]: index is lower than valid index";
+        }
+        if (index >= this.titles.length) {
+            return "[error]: index is greather than valid index";
+        }
+
     }
     /**
      * Description placeholder
