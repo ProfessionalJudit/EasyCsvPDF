@@ -208,8 +208,7 @@ class EasyCsvPdf {
 
     }
     /**
-     * Description placeholder
-     * TODO!!!
+     * Retrieves the line at the specified index from the CSV data, starts with 0
      * @param {number} [index=0] 
      */
     getData(index = 0) {
