@@ -3,8 +3,12 @@
  *
  * @type {*}
  */
-const { jsPDF } = window.jspdf;
-
+let jsPDF;
+if (typeof window !== 'undefined' && window.jspdf) {
+    jsPDF = window.jspdf.jsPDF;
+} else {
+    jsPDF = require('jspdf').jsPDF;
+}
 /**
  * EasyCsvPdf
  * @class
@@ -188,12 +192,13 @@ class EasyCsvPdf {
     }
 
     /**
-     * Description placeholder
-     * TODO!!!
+     * Retrieves the column title at the specified index from the CSV data
      * @param {number} [index=0] 
      */
     getColumnTitle(index = 0) {
-
+        if (index >= 0 && index < this.titles.length) {
+            return this.titles[index];
+        }
     }
     /**
      * Description placeholder
@@ -458,5 +463,4 @@ class EasyCsvPdf {
 
 }
 
-
-
+module.exports = EasyCsvPdf;

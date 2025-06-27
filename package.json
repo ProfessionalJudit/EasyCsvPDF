@@ -15,13 +15,26 @@
   "type": "commonjs",
   "main": "easycsvpdf.js",
   "scripts": {
-    "test": "playwright test"
+    "test": "playwright test",
+    "test-jest": "jest"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/jest-tests"
+    ],
+    "testMatch": [
+      "**/*.test.js"
+    ],
+    "testEnvironment": "jsdom"
   },
   "devDependencies": {
     "@playwright/test": "^1.53.1",
+    "jest": "^30.0.3",
+    "jest-environment-jsdom": "^30.0.2",
     "playwright": "^1.53.1"
   },
   "dependencies": {
+    "jspdf": "2.5.1",
     "pdf-parse": "^1.1.1"
   }
 }
