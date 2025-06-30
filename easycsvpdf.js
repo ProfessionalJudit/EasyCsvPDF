@@ -387,7 +387,7 @@ class EasyCsvPdf {
                     this.doc.text(text_nospan, this.x, this.y, { maxWidth: column_width * element_span });
                     current_column += element_span;
                     if (print_rect) {
-                        this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3, column_width * element_span, this.format.text_size - this.format.text_size / 7)
+                        this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3, column_width * element_span + (element_span - 1) * this.format.card_column_separation, this.format.text_size - this.format.text_size / 7)
                     }
                 }
             }
