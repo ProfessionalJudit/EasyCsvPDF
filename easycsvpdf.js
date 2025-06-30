@@ -158,7 +158,9 @@ class EasyCsvPdf {
         text_size: 6,
         overflow: "push", // "Push" -> augment y cordinate, "none" -> do nothing
         margin: 20,
-        card_column_separation: 5 //Separation between columns in a card
+        card_column_separation: 5, //Separation between columns in a card
+        card_row_separation: 0 //Separation between rows in a card
+
     };
 
     /**
@@ -242,6 +244,7 @@ class EasyCsvPdf {
         let column_width = 0;
         this.x = this.format.margin;
         this.y += this.format.text_size / 2;
+        this.y += this.format.card_row_separation / 2;
         //Count number of columns, and set widths
         for (let i = 0; i < row_format.length; i++) {
             const element_noclean = row_format[i].split(':');
@@ -316,7 +319,7 @@ class EasyCsvPdf {
                         this.doc.text(texts[j], this.x, this.y, { maxWidth: column_width * element_span });
                         if (print_rect) {
                             this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3
-                                , column_width * element_span, this.format.text_size - this.format.text_size / 7)
+                                , column_width * element_span + (element_span - 1) * this.format.card_column_separation, this.format.text_size - this.format.text_size / 7)
                         }
                         current_column += element_span;
                         text_nospan = text_nospan + element[0];
@@ -339,7 +342,7 @@ class EasyCsvPdf {
                             this.doc.text(data[data_index], this.x, this.y, { maxWidth: column_width * element_span });
                             if (print_rect) {
                                 this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3,
-                                    column_width * element_span, this.format.text_size - this.format.text_size / 7)
+                                    column_width * element_span + (element_span - 1) * this.format.card_column_separation, this.format.text_size - this.format.text_size / 7)
                             }
                         }
                     } else {
@@ -347,7 +350,7 @@ class EasyCsvPdf {
                         //this.doc.text("space", this.x, this.y, { maxWidth: column_width * element_span });
                         if (print_rect) {
                             this.doc.rect(this.x, this.y - this.format.text_size + this.format.text_size / 3
-                                , column_width * element_span, this.format.text_size - this.format.text_size / 7)
+                                , column_width * element_span + (element_span - 1) * this.format.card_column_separation, this.format.text_size - this.format.text_size / 7)
                         }
                     }
                     current_column += element_span;
@@ -394,7 +397,8 @@ class EasyCsvPdf {
 
 
         }
-
+        //this.y += this.format.text_size / 2;
+        this.y += this.format.card_row_separation / 2;
     }
     /**
      * Prints a new card with the specified data
