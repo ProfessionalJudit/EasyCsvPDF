@@ -39,6 +39,11 @@ class EasyCsvPdf {
      */
     csv = "";
     /**
+     * Open the doc in a new window?.
+     * @type {boolean}
+     */
+    new_window = false;
+    /**
      * CSV file split in lines, one line per index, set at the constructor.
      * Changing this variable manually might break things and won't set the correct column names when printing!
      * @type {string[]}
@@ -468,7 +473,12 @@ class EasyCsvPdf {
         if (this.format.type == "CARDS") {
             this.createCards();
         }
-        this.doc.save("test.pdf");
+        if(this.new_window){
+            window.open(this.doc.output('bloburl'))
+
+        }else{
+            this.doc.save("test.pdf");
+        }
     }
 
 
@@ -479,7 +489,6 @@ class EasyCsvPdf {
     savePdf(filename = "test.pdf") {
         this.doc.save(filename);
     }
-
 
 }
 
