@@ -418,7 +418,7 @@ class EasyCsvPdf {
             }
         }
         this.createCardSpacing();
-        if (this.y + 35 > this.doc_height) {
+        if (this.y + (this.format.card_rows.length * this.format.text_size) > this.doc_height) {
             this.doc.addPage();
             this.doc.setFont("helvetica", "normal", "bold");
             this.doc.setFontSize(this.format.text_size + this.format.text_size / 3);
